@@ -1,11 +1,12 @@
 {
 	"name": "prom-client",
 	"version": "10.2.2",
-	"description": "Client for prometheus",
+	"description":
+		"Client for prometheus, patched to use pm2 instead of cluster communication",
 	"main": "index.js",
 	"files": ["lib/", "index.js", "index.d.ts"],
 	"engines": {
-		"node": ">=4"
+		"node": ">=6"
 	},
 	"scripts": {
 		"test": "npm run lint && npm run compile-typescript && npm run test-unit",
@@ -16,12 +17,12 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:siimon/prom-client.git"
+		"url": "git@github.com:docnetwork/prom-client.git"
 	},
 	"keywords": ["Prometheus", "Metrics", "Client"],
-	"author": "Simon Nyberg",
+	"author": "DocNetwork.org (forked from Simon Nyberg)",
 	"license": "Apache-2.0",
-	"homepage": "https://github.com/siimon/prom-client",
+	"homepage": "https://github.com/docnetwork/prom-client",
 	"devDependencies": {
 		"eslint": "^4.1.1",
 		"eslint-plugin-prettier": "^2.1.2",
@@ -34,7 +35,8 @@
 		"typescript": "^2.5.2"
 	},
 	"dependencies": {
-		"tdigest": "^0.1.1"
+		"tdigest": "^0.1.1",
+		"pm2": "^2.8.0"
 	},
 	"types": "./index.d.ts",
 	"jest": {
