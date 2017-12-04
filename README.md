@@ -1,13 +1,54 @@
-# Prometheus client for node.js [![Build Status](https://travis-ci.org/siimon/prom-client.svg?branch=master)](https://travis-ci.org/siimon/prom-client) [![Build status](https://ci.appveyor.com/api/projects/status/k2e0gwonkcee3lp9/branch/master?svg=true)](https://ci.appveyor.com/project/siimon/prom-client/branch/master)
+# Prometheus client for node.js [![Build Status](https://travis-ci.org/docnetwork/prom-client.svg?branch=master)](https://travis-ci.org/docnetwork/prom-client)
 
 A prometheus client for node.js that supports histogram, summaries, gauges and
 counters.
+
+Forked to use [pm2](https://github.com/Unitech/pm2) instead of pure cluster code
+to communicate between workers.
 
 ### Usage
 
 See example folder for a sample usage. The library does not bundle any web
 framework, to expose the metrics just return the `metrics()` function in the
 registry.
+
+#### Usage with pm2
+
+When running under `pm2`, there is no cluster master process needed to send
+messages to workers requesting their metrics for aggregation. Instead, a
+different application running under `pm2` in fork mode should act as the master
+cluster process, using `pm2` libraries to send messages to the other workers.
+
+`ecosystem.json` example:
+
+```
+{
+  "apps" : [
+    {
+      "name": "myapp",
+      "script": "app.js",
+      "exec_mode": "cluster",
+      "instances": 0,
+      "env": {
+        "CLUSTER": true
+      }
+    },
+		{
+      "name": "metrics",
+      "script": "metrics.js",
+      "exec_mode": "fork",
+      "env": {
+        "CLUSTER": false
+      }
+    }
+  ]
+}
+```
+
+Any code that in the examples running in a `if (cluster.isMaster)` block should
+run in `metrics.js` from this example.
+
+See below for notes on why aggregation is needed.
 
 #### Usage with Node.js's `cluster` module
 
